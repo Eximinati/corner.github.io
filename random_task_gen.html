@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Task Generator</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        /* Resetting default margins and paddings */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a192f, #1c1c1c);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: #001f3f;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffcc00;
+            text-align: center; /* Center the text */
+        }
+
+        .task-display {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid #ffcc00;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            height: 200px;
+            overflow: auto;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            cursor: pointer; /* Change cursor to indicate clickable area */
+        }
+
+        .task-display:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn {
+            background-color: #ff0072;
+            color: #fff;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 48%;
+        }
+
+        .btn:hover {
+            background-color: #e6005c;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            margin-top: auto;
+            font-size: 12px;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">AKUá Corner</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav"> <!-- Align to the right -->
+                <ul class="navbar-nav ms-md-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="home"><i class="me-2"></i>Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="feedback"><i class="me-2"></i>Feedback</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="term"><i class="me-2"></i>Terms</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Task Generator</h1>
+        <div class="task-display" id="task-display" ondblclick="copyToClipboard()">
+            <!-- Random tasks will be displayed here -->
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn" onClick="generateTasks()">Generate New Tasks</button>
+            <button class="btn" onClick="copyToClipboard()">Copy Task</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="copy-toast" style="position: absolute; top: 20px; right: 20px; z-index: 1050" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <strong class="mr-auto">Success</strong>
+            <small class="text-muted">just now</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Tasks Copied!
+        </div>
+    </div>
+
+    <footer>
+        Made by Aku
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        "use strict";
+
+        const tasks = [
+            { name: "Adi Kailash", link: "https://maps.app.goo.gl/GPkJzX9KsbmrZ2VU8" },
+            { name: "Kedarnath", link: "https://maps.app.goo.gl/pAetUcSbzaQJjCTF8" },
+            { name: "Kamet Uttarakhand 246422, India", link: "https://maps.app.goo.gl/eKCHttMLvAFQw7Yg8" },
+            { name: "Trisul, Chamoli, Uttarakhand 246443, India", link: "https://maps.app.goo.gl/9arEifvMPbdPuvax7" },
+            { name: "Nanda Devi", link: "https://maps.app.goo.gl/T3jtCaBQxBCkoxwf9" },
+            { name: "Kamet", link: "https://maps.app.goo.gl/sbkroQk49JD281f76" },
+            { name: "Punjab Grill Bandra Kurla Complex, Mumbai, Maharashtra 400098, India", link: "https://maps.app.goo.gl/EJ778B5m2RTyG4RN8" },
+            { name: "Copper Chimney - Authentic Indian Food Near Bandra East (BKC)", link: "https://maps.app.goo.gl/GMQw4Dq53agmSkzh7" },
+            { name: "Poetry by Love and Cheesecake, Chembur, Mumbai, Maharashtra 400071, India", link: "https://maps.app.goo.gl/XWHijb24MhmP79nR8" },
+            { name: "Café Coffee Day, Mumbai, Maharashtra 400088, India", link: "https://maps.app.goo.gl/d6QT8wHPjPtNShxY9" },
+            { name: "Love & Latte Sahar, Mumbai, Maharashtra 400059, India", link: "https://maps.app.goo.gl/AHd221VDAyf8Bkxe9" },
+            { name: "Dum Pukht, Delhi 110001, India", link: "https://maps.app.goo.gl/KRQt7NQXWZ9bG1e78" },
+            { name: "Khan Chacha, New Delhi, Delhi 110001, India", link: "https://maps.app.goo.gl/9Eb1bBMcMyQ8T9pS7" },
+            { name: "Hauz Khas Social, New Delhi, Delhi 110016, India", link: "https://maps.app.goo.gl/9Xe9CkY4iFex6aHDA" },
+            { name: "Paranthe Wali Gali, Chandni Chowk, New Delhi, Delhi 110006, India", link: "https://maps.app.goo.gl/hTt4csM3sNNWxWgT7" },
+            { name: "Mocambo, Kolkata, West Bengal 700016, India", link: "https://maps.app.goo.gl/gC5khkZtH1Hh9CFB8" },
+            { name: "Jaisalmer, Rajasthan, India", link: "https://maps.app.goo.gl/nDBHrPf9DqFnv1Z6A" },
+            { name: "Chhatra Sagar, Rajasthan, India", link: "https://maps.app.goo.gl/94SQpq8UJmB7A49C7" },
+            { name: "Jaisamand Lake, Udaipur, Rajasthan, India", link: "https://maps.app.goo.gl/5aq9g86NEJeCZUmj8" },
+            { name: "Kumbhalgarh Fort, Rajasthan, India", link: "https://maps.app.goo.gl/vWLBV4N6Bzkr5M7Q7" },
+            { name: "Taj Mahal, Agra, Uttar Pradesh, India", link: "https://maps.app.goo.gl/g5uqhbb5mBky45cx7" },
+            { name: "Shimla, Himachal Pradesh, India", link: "https://maps.app.goo.gl/1iMQk6rySgTgJKnV6" },
+            { name: "Manali, Himachal Pradesh, India", link: "https://maps.app.goo.gl/YiFCcT27C1Z1S9Z88" },
+            { name: "Mysore Palace, Mysuru, Karnataka, India", link: "https://maps.app.goo.gl/6czcKiFdo4tZXu7A8" },
+            { name: "Hampi, Karnataka, India", link: "https://maps.app.goo.gl/QxvGHK84yMT1NFWDA" },
+            { name: "Ranthambore National Park, Rajasthan, India", link: "https://maps.app.goo.gl/PhgVqEn6YxWgyyW6A" },
+            { name: "Andaman Islands, India", link: "https://maps.app.goo.gl/UyXjHch4sG32GgrZ6" },
+            { name: "Goa, India", link: "https://maps.app.goo.gl/GiPCKQJZZckjME1J9" },
+            { name: "Jammu and Kashmir, India", link: "https://maps.app.goo.gl/YuJc4A8TyEauBRHFA" },
+            { name: "Rishikesh, Uttarakhand, India", link: "https://maps.app.goo.gl/JkZG7XqG4dAAG5Hx6" },
+            { name: "Varanasi, Uttar Pradesh, India", link: "https://maps.app.goo.gl/2Fm3Avy5dyLpoUdv8" }
+        ];
+
+        function generateTasks() {
+            const randomTasks = [];
+            while (randomTasks.length < 2) {
+                const randomIndex = Math.floor(Math.random() * tasks.length);
+                const randomTask = tasks[randomIndex];
+                if (!randomTasks.includes(randomTask)) {
+                    randomTasks.push(randomTask);
+                }
+            }
+            document.getElementById("task-display").innerHTML = randomTasks.map(task => `${task.name}<br>${task.link}`).join("<br><br>");
+        }
+
+        function copyToClipboard() {
+            const taskText = document.getElementById("task-display").innerText;
+            navigator.clipboard.writeText(taskText).then(() => {
+                const copyToast = new bootstrap.Toast(document.getElementById('copy-toast'));
+                copyToast.show();
+            });
+        }
+
+        // Initial task generation
+        generateTasks();
+    </script>
+</body>
+
+</html>
